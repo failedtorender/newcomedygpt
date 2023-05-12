@@ -18,7 +18,7 @@ WORKDIR /app
 
 # Set OpenAI API key environment variable
 ARG OPENAI_API_KEY
-ENV OPENAI_API_KEY=${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}
+ENV OPENAI_API_KEY=${OPENAI_API_KEY}
 
 
 # Install system dependencies
