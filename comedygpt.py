@@ -99,7 +99,7 @@ def call_gpt3_api(prompt, max_tokens):
 
     try:
         response = openai.Completion.create(
-            engine="gpt-3.5-turbo",
+            engine="text-davinci-002",
             prompt=prompt,
             max_tokens=max_tokens,
             n=1,
