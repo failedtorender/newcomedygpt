@@ -20,6 +20,7 @@
   height: 100vh;
   margin: 0;
   padding: 0;
+  overflow: auto;
 }
 
 #funnybot {
@@ -310,6 +311,7 @@ h1 {
                     <b>ComedyGPT</b> &nbsp;by @failedtorender
                     <a href="https://www.twitter.com/failedtorender" target="_blank">
                         <img id="twitter-icon" src="static/twitter-icon.png" alt="@failedtorender">
+                        <div id="temporary-message"></div>
                     </a>
                 </p>
                 <p id="audio-text"></p>
@@ -320,7 +322,6 @@ h1 {
                 <div id="gpt-response">
                     <div class="gpt-response-content"></div>
                 </div>
-                <div id="temporary-message"></div>
                 <div class="bottom-space"></div>
             </div>
         </div>

@@ -95,16 +95,16 @@ def convert_audio_to_text(audio_data):
 
     return audio_text
 
-def call_gpt3_api(prompt):
+def call_gpt3_api(prompt, max_tokens):
 
     try:
         response = openai.Completion.create(
-            engine="text-davinci-002",
+            engine="gpt-3.5-turbo",
             prompt=prompt,
-            max_tokens=500,
+            max_tokens=max_tokens,
             n=1,
             stop=None,
-            temperature=1.0,
+            temperature=0.7,
         )
     except Exception as e:
         print(f"GPT-3 API call failed with exception: {e}")
@@ -131,15 +131,20 @@ def api_joke_rating():
     print(f"Audio text: {audio_text}")
 
     new_prompt = f"""Please provide feedback for my joke recording, e.g., \"{audio_text}\". Take into consideration the voice meter measurements attached, 
-    average RMS ({average_rms}), and average ZCR ({average_zcr}). You will analyze the performance and determine which category among the 
-    seven types of delivery and cadence tactics (Energetic and Engaging, Conversational and Informal, Emotional and Expressive, Pause-Driven and Reflective, Rhythmic and 
-    Poetic, Slow and Deliberate, Monotone and Flat) I fall into. Please in no more than 400 characters, offer specific feedback on 
-    strengths and areas for improvement to enhance my stand-up comedy delivery speed and cadence. Please do not response with any 
-    information on the average RMS and ZCR. You will provide the rating in the format '֎ X/10'."""
+average RMS ({average_rms}), and average ZCR ({average_zcr}). You will analyze the performance and provide constructive feedback on the following aspects:
+
+1. Delivery: Evaluate the overall delivery style, including energy, engagement, and comedic timing.
+2. Cadence: Assess the rhythm, pace, and variation in speech to create comedic impact.
+3. Content: Comment on the humor, originality, and relevance of the jokes presented.
+4. Voice Quality: Consider the clarity, tone, and modulation of the voice.
+
+Please provide specific feedback on both strengths and areas for improvement. Your rating should reflect the overall effectiveness of the performance, taking into account the factors mentioned above. Please provide the rating in the format '֎ X/10', along with your detailed feedback (maximum 400 characters).
+
+Note: Your feedback should be honest and constructive, aiming to help enhance the stand-up comedy delivery. Your evaluation will play a crucial role in improving future performances. Thank you for your valuable input!"""
 
 
 
-    gpt_response = call_gpt3_api(new_prompt)
+    gpt_response = call_gpt3_api(new_prompt, 300)
 
     # Add this line to print the raw GPT response
     print(f"GPT response: {gpt_response}")
@@ -193,11 +198,11 @@ def api_analyze_joke():
 
     styles = ', '.join(favorite_punchlines_list[:-1]) + ', and ' + favorite_punchlines_list[-1]
 
-    prompt = f"""Given the joke premise: \"{audio_text}\", create eigth different punchlines that are related to the premise and are funny. Use the following styles: {styles}, and refer to the following list of favorite punchlines for inspiration:
+    prompt = f"""Given the joke premise: \"{audio_text}\", generate eight original punchlines that are related to the premise and are side splitting funny. Use the following styles: {styles}. Please do not directly use or slightly modify the punchlines from the provided favorite punchlines list. Instead, use them just for inspiration:
 
 {favorite_punchlines}
 
-Please make sure each punchline is unique, hilarious, well-formatted, and corresponds to a different style. Experiment with different endings and ensure a variety of punchlines.
+Make sure each punchline is unique, hilarious, well-formatted, and corresponds to a different style. Experiment with different endings and ensure a variety of amazing punchlines. Do not repeat any punchlines from the favorite punchlines list.
 
 1. (Twist):
 
@@ -215,12 +220,9 @@ Please make sure each punchline is unique, hilarious, well-formatted, and corres
 
 8. (Deadpan):
 
-
 """
 
-    gpt_response = call_gpt3_api(prompt)
+
+    gpt_response = call_gpt3_api(prompt, 500)
 
     return jsonify({"audio_text": audio_text, "gpt_response": gpt_response})
-
-
-app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 60  # Set the server timeout to 60 seconds
