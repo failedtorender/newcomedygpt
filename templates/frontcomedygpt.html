@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ComedyGPT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+    <style>
+    body {
+  background-image: linear-gradient(to right, #1d171d, #1d171d);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+#funnybot {
+  width: 300px; /* Set your desired fixed width */
+  height: auto;
+  margin-bottom: 0rem;
+  border: 1px solid black; /* Add a 1px solid black border */
+}
+
+
+
+#content {
+  position: fixed;
+  position: center;
+  animation: slide-up 1s ease-out;
+  width: 70%;
+  max-width: 800;
+  margin: 0 auto;
+  overflow-y: auto;
+  overflow-x: hidden; /* Hide horizontal overflow */
+}
+
+#content-text {
+  flex: 1;
+  position: center;
+  padding-bottom: 2rem;
+}
+
+.content-section {
+  margin-bottom: 1.5rem;
+}
+
+
+h1 {
+  font-size: 3rem;
+  font-family: "Lobster";
+  text-align: center;
+  width: 50%;
+  margin: 0 auto; /* Add this line */
+  margin-top: 4rem;
+  margin-bottom: 1.5rem;
+  color: white;
+  text-shadow: 10px 10px 10px #000000;
+}
+
+@media (max-width: 1024px) {
+  h1 {
+    font-size: 3rem;
+    max-width: 60%;
+    min-width: 60%;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  #funnybot {
+  width: 300px; /* Set your desired fixed width */
+  height: auto;
+  margin-bottom: 0rem;
+  border: 1px solid black; /* Add a 1px solid black border */
+}
+
+
+  #content {
+    width: 90%;
+    align-items: center;
+  }
+
+  .buttons {
+    font-size: 0.5rem;
+    align-items: center;
+  }
+}
+
+
+
+.rating-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: fixed;
+  bottom: 1rem;
+  left: 0;
+  right: 0;
+}
+
+.feedback-container {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+}
+
+.feedback-container textarea {
+  width: 90%; /* Adjust the width percentage as needed */
+  height: 80%; /* Adjust the height percentage as needed */
+  padding: 1rem;
+  box-sizing: border-box;
+  font-size: 1rem;
+  resize: none; /* Disable resizing of the text area */
+}
+
+
+.popup {
+  width: 80%;
+  max-width: 600px;
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 5px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.rating {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: center;
+  align-items: center;
+}
+
+.rating > input {
+  display: none;
+}
+
+.rating > label {
+  display: inline-block;
+  margin: 0 0.5rem;
+  font-size: 2rem;
+  color: #ccc;
+  cursor: pointer;
+  position: relative;
+}
+
+.rating > label:before {
+  content: "\2605";
+  opacity: 0.3;
+  font-size: 2rem;
+  transition: opacity 0.2s linear;
+}
+
+.rating > input:checked ~ label:before,
+.rating > input:checked ~ label:before,
+.rating:not(:checked) > label:hover:before,
+.rating:not(:checked) > label:hover ~ label:before {
+  opacity: 1;
+  color: gold;
+}
+
+
+
+
+#results, #gpt-response {
+    padding: 1rem;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    border-radius: 4px;
+    position: center;
+    width: 100%;
+    margin-bottom: 1.5rem;
+    display: none;
+    white-space: pre-wrap;
+    color: white;
+}
+
+
+.gpt-response-content, #joke-rating-value {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    color: white;
+    text-align: center;
+}
+
+#gpt-response {
+    font-size: 1rem;
+    font-family: 'Roboto', sans-serif;
+    color: white;
+    text-align: center;
+}
+
+.punchline {
+    font-family: 'Roboto', sans-serif;
+    padding:2rem;
+    font-size: 1.25rem;
+    color: white;
+    text-align: center;
+}
+
+
+#audio-text {
+    display: block;
+    font-size: 1.25rem !important;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    text-align: center;
+}
+
+#footer-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#twitter-icon {
+    width: 25px;
+    height: 25px;
+}
+
+.bottom-space {
+    height: 4rem;
+}
+
+
+@keyframes slide-up {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+#recordButton, #stopButton {
+    margin-bottom: 0.5rem;
+    font-size: 1.0rem;
+    padding: 1.0rem 1.0rem;
+    border: black;
+    color: white;
+    background-color: #3c7c73;
+    border-radius: 6px;
+    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0);
+    cursor: pointer;
+    transition: background-color 0.5s;
+}
+
+#recordButton:hover, #stopButton:hover {
+    background-color: #44a08d;
+}
+
+#recordButton:disabled, #stopButton:disabled {
+    background-color: #8db2a5;
+    border: 1px solid #5d8c81;
+    cursor: not-allowed;
+}
+
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/meyda@5.6.0/dist/web/meyda.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HTYWTXHYR6"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-HTYWTXHYR6');
+    </script>
+
+    
+<link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+<link rel="icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/png">
+
+
+</head>
+<body>
+    <div id="content">
+        <div id="content-text">
+            <h1>Link, Laugh, Load</h1>
+            <img id="funnybot" src="/static/FunnyBot3000.png">
+            <div class="content-section">
+                <button id="recordButton" style="margin-bottom: 0.5rem;">Record a Premise</button>
+                <button id="stopButton" disabled style="margin-bottom: 0.5rem;">Activate a Robot</button>
+            </div>
+            <div class="content-section">
+                <p style="font-family: 'Lobster', cursive; color: white; margin-top: 0.5rem;">
+                    <b>ComedyGPT</b> &nbsp;by @failedtorender
+                    <a href="https://www.twitter.com/failedtorender" target="_blank">
+                        <img id="twitter-icon" src="static/twitter-icon.png" alt="@failedtorender">
+                    </a>
+                </p>
+                <p id="audio-text"></p>
+                <div id="results"></div>
+                <div id="joke-rating">
+                    <p id="joke-rating-value"></p>
+                </div>
+                <div id="gpt-response">
+                    <div class="gpt-response-content"></div>
+                </div>
+                <div id="temporary-message"></div>
+                <div class="bottom-space"></div>
+            </div>
+        </div>
+
+
+
+
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="static/main.js"></script>
+
+        <script>
+            function displayGPTResponse(response) {
+                console.log(response);
+                let gptResponseElement = document.getElementById("gpt-response");
+                gptResponseElement.innerHTML = "";
+
+                let suggestions = response.suggestions;
+                let responseHTML = "<h3>PUNCH BOT:</h3><ol>";
+
+                for (let i = 0; i < suggestions.length; i++) {
+                    responseHTML += `<li>${suggestions[i]}</li>`;
+                }
+
+                responseHTML += "</ol>";
+                gptResponseElement.innerHTML = `<div class="gpt-response-content">${responseHTML}</div>`;
+                gptResponseElement.style.display = "block";
+            }
+
+
+            // Add your existing JavaScript code for recording and stopping here
+
+            // Assuming you have a function named 'sendAudio' that sends the recorded audio to the server
+            // Modify the 'sendAudio' function to include the following code snippet to make the AJAX request and update the DOM
+            function sendAudio(audioBlob) {
+                let formData = new FormData();
+                formData.append("audio_data", audioBlob, "blob");
+
+                $.ajax({
+                    url: "/generate_punchlines",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        console.log(response);
+                        displayGPTResponse(response);
+                        let suggestions = response.suggestions;
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error: " + error);
+                    }
+                });
+            }
+        </script>
+
+
+
+
+        <div id="joke-rating">
+            <p id="joke-rating-value"></p>
+
+            <div class="rating-container">
+                <div class="rating">
+                    <input type="radio" id="star5" name="rating" value="5">
+                    <label for="star5" title="5 stars"></label>
+                    <input type="radio" id="star4" name="rating" value="4">
+                    <label for="star4" title="4 stars"></label>
+                    <input type="radio" id="star3" name="rating" value="3">
+                    <label for="star3" title="3 stars"></label>
+                    <input type="radio" id="star2" name="rating" value="2">
+                    <label for="star2" title="2 stars"></label>
+                    <input type="radio" id="star1" name="rating" value="1">
+                    <label for="star1" title="1 star"></label>
+                </div>
+            </div>
+
+            <script>
+                // Get all the radio buttons inside the rating container
+                const ratingRadios = document.querySelectorAll('.rating input[type="radio"]');
+
+                // Add a click event listener to each radio button
+                ratingRadios.forEach(function (radio) {
+                    radio.addEventListener('click', function () {
+                        // Show the feedback container when a radio button is clicked
+                        document.querySelector(".feedback-container").style.display = "flex";
+                    });
+                });
+            </script>
+
+
+            <div class="feedback-container">
+                <div class="popup">
+                    <form id="feedback-form">
+                        <textarea id="feedback-text" placeholder="Thank you! Please let me know what you loved about ComedyGPT and what would make it better!  -Render" required></textarea>
+                        <div class="buttons">
+                            <button type="submit">Submit</button>
+                            <button type="button" class="cancel-button">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
+
+</body>
+</html>

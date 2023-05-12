@@ -1,0 +1,16 @@
+{
+  "name": "comedygpt",
+  "version": "2.0.0",
+  "description": "See something? Say something!",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "meyda": "^5.6.0",
+    "express": "4.18.2",
+    "express-sslify": "1.2.0",
+    "body-parser": "^1.19.0",
+    "fs": "0.0.1-security"
+  }
+}
