@@ -65,12 +65,9 @@ EXPOSE 5000
 # Install meyda using npm
 RUN npm install
 RUN npm install aws-sdk
-RUN npm install meyda
 RUN npm install express
 
 
-# Start the application using Gunicorn
-# Start the application using Gunicorn
 # Start the application using Gunicorn
 CMD ["node", "server.js"]
 CMD gunicorn --timeout 120 --workers 1 --bind 0.0.0.0:${PORT:-5000} --log-level debug comedygpt:app

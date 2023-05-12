@@ -179,6 +179,9 @@ h1 {
   color: gold;
 }
 
+li {
+    margin-bottom: 2px;
+}
 
 
 
@@ -342,7 +345,8 @@ h1 {
                 let responseHTML = "<h3>PUNCH BOT:</h3><ol>";
 
                 for (let i = 0; i < suggestions.length; i++) {
-                    responseHTML += `<li>${suggestions[i]}</li>`;
+                  responseHTML += `<li>${suggestions[i]}</li>` + "<br>";
+
                 }
 
                 responseHTML += "</ol>";

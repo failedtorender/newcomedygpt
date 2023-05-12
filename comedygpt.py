@@ -93,13 +93,13 @@ def convert_audio_to_text(audio_data):
 
     return audio_text
 
-def call_gpt3_api(prompt, max_tokens, presence_penalty=2.0):
+def call_gpt3_api(prompt, presence_penalty=2.0):
 
     try:
         response = openai.Completion.create(
-            engine="text-davinci-002",
+            engine="text-davinci-003",
             prompt=prompt,
-            max_tokens=max_tokens,
+            max_tokens=500,
             n=1,
             stop=None,
             temperature=0.7,
@@ -179,6 +179,6 @@ Make sure each punchline is unique, hilarious, well-formatted, and corresponds t
 """
 
 
-    gpt_response = call_gpt3_api(prompt, 500)
+    gpt_response = call_gpt3_api(prompt)
 
     return jsonify({"audio_text": audio_text, "gpt_response": gpt_response})
