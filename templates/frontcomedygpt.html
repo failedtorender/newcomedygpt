@@ -303,7 +303,7 @@ li {
 <body>
     <div id="content">
         <div id="content-text">
-            <h1>Link, Laugh, Load</h1>
+            <h1>Log, Laugh, Load</h1>
             <img id="funnybot" src="/static/FunnyBot3000.png">
             <div class="content-section">
                 <button id="recordButton" style="margin-bottom: 0.5rem;">Record a Premise</button>
@@ -344,10 +344,10 @@ li {
                 let suggestions = response.suggestions;
                 let responseHTML = "<h3>PUNCH BOT:</h3><ol>";
 
-                for (let i = 0; i < suggestions.length; i++) {
-                  responseHTML += `<li>${suggestions[i]}</li>` + "<br>";
+                  for (let i = 0; i < suggestions.length; i++) {
+  responseHTML += `<li><p>${suggestions[i]}</p></li>`;
+}
 
-                }
 
                 responseHTML += "</ol>";
                 gptResponseElement.innerHTML = `<div class="gpt-response-content">${responseHTML}</div>`;

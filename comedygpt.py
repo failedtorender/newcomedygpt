@@ -119,8 +119,6 @@ def call_gpt3_api(prompt, presence_penalty=2.0):
 
 
 
-
-
 @app.route('/analyze_joke', methods=['POST'])
 def api_analyze_joke():
     print("Request received at /analyze_joke")

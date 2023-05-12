@@ -20,10 +20,13 @@ app.use((req, res, next) => {
 
 const AWS = require('aws-sdk');
 
+const AWS = require('aws-sdk');
+
 AWS.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: 'us-east-2'
+  region: 'us-east-2',
+  s3ForcePathStyle: true // This enables path-style access, which is necessary for Access Points
 });
 
 // Create an S3 instance with the configured AWS credentials
@@ -45,11 +48,13 @@ app.post('/submit_feedback', (req, res) => {
       return;
     }
 
+    // Use the ARN of the access point here, not the bucket name
     const params = {
-      Bucket: 'comedygptuserfeedback',
-      Key: 'newuserfeedback.txt',
-      Body: fs.createReadStream(filePath),
+      Bucket: 'comedygptuserfeedback', // The name of your bucket
+      Key: 'newuserfeedback.txt', // The key of the object you're creating or overwriting
+      Body: fs.createReadStream(filePath), // The contents of the object
     };
+    
 
     // Upload the feedback file to the S3 bucket using the Access Point
     s3.upload(params, (err, data) => {
@@ -70,6 +75,7 @@ app.post('/submit_feedback', (req, res) => {
     });
   });
 });
+
 
 // Start the server
 const PORT = process.env.PORT || 5000;
