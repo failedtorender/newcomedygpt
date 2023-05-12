@@ -99,12 +99,12 @@ def call_gpt3_api(prompt):
 
     try:
         response = openai.Completion.create(
-            engine="text-davinci-003",
+            engine="text-davinci-002",
             prompt=prompt,
             max_tokens=500,
             n=1,
             stop=None,
-            temperature=0.5,
+            temperature=1.0,
         )
     except Exception as e:
         print(f"GPT-3 API call failed with exception: {e}")
