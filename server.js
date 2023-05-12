@@ -2,6 +2,7 @@ const express = require('express');
 const enforce = require('express-sslify');
 const path = require('path');
 const fs = require('fs');
+const AWS = require('aws-sdk');
 const app = express();
 
 // Middleware
