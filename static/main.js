@@ -23,7 +23,7 @@ function startRecording() {
 
       const audioContext = new AudioContext();
       audioSource = audioContext.createMediaStreamSource(stream);
-      meyda = meyda.createMeydaAnalyzer({
+      meyda = Meyda.createMeydaAnalyzer({
         audioContext: audioContext,
         source: audioSource,
         bufferSize: 512,
