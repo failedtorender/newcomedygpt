@@ -104,7 +104,7 @@ def call_gpt3_api(prompt):
             max_tokens=500,
             n=1,
             stop=None,
-            temperature=1.0,
+            temperature=0.5,
         )
     except Exception as e:
         print(f"GPT-3 API call failed with exception: {e}")
