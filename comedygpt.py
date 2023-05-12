@@ -95,7 +95,7 @@ def convert_audio_to_text(audio_data):
 
     return audio_text
 
-def call_gpt3_api(prompt, max_tokens):
+def call_gpt3_api(prompt, max_tokens, presence_penalty=2.0):
 
     try:
         response = openai.Completion.create(
@@ -105,6 +105,7 @@ def call_gpt3_api(prompt, max_tokens):
             n=1,
             stop=None,
             temperature=0.7,
+            presence_penalty=presence_penalty,  # add this line
         )
     except Exception as e:
         print(f"GPT-3 API call failed with exception: {e}")

@@ -139,7 +139,7 @@ function showTemporaryMessage() {
     
     setTimeout(() => {
       temporaryMessageElement.innerHTML = '';
-    }, 5000); // Adjust this value to control how long the message is displayed (in milliseconds)
+    }, 15000); // Adjust this value to control how long the message is displayed (in milliseconds)
   }
   
 
