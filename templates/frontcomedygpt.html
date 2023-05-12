@@ -344,10 +344,10 @@ li {
                 let suggestions = response.suggestions;
                 let responseHTML = "<h3>PUNCH BOT:</h3><ol>";
 
-                  for (let i = 0; i < suggestions.length; i++) {
-  responseHTML += `<li><p>${suggestions[i]}</p></li>`;
-}
+                for (let i = 0; i < suggestions.length; i++) {
+                  responseHTML += `<li>${suggestions[i]}</li>` + "<br>";
 
+                }
 
                 responseHTML += "</ol>";
                 gptResponseElement.innerHTML = `<div class="gpt-response-content">${responseHTML}</div>`;
