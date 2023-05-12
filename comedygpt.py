@@ -8,7 +8,6 @@ import numpy as np
 import librosa
 import tempfile
 import os
-from flask import redirect
 import spacy
 
 # Load the spacy language model
@@ -31,9 +30,8 @@ def index():
 def process_joke(audio_data):
     audio_text = convert_audio_to_text(audio_data)
     gpt_analyze_response = api_analyze_joke(audio_text)
-    gpt_joke_rating_response = api_joke_rating(audio_data, audio_text)
     
-    return {"audio_text": audio_text, "gpt_analyze_response": gpt_analyze_response, "gpt_joke_rating_response": gpt_joke_rating_response}
+    return {"audio_text": audio_text, "gpt_analyze_response": gpt_analyze_response}
 
 
 # Add a new route to handle feedback submission
@@ -117,58 +115,6 @@ def call_gpt3_api(prompt, max_tokens, presence_penalty=2.0):
 
     return response_text
 
-
-
-@app.route('/joke_rating', methods=['POST'])
-def api_joke_rating():
-    print("Request received at /joke_rating")
-    average_rms = float(request.args.get('average_rms'))
-    average_zcr = float(request.args.get('average_zcr'))
-    average_spectral_centroid = float(request.args.get('average_spectral_centroid'))
-    average_mfcc = [float(val) for val in request.args.get('average_mfcc').split(',')]  # parse as list of floats
-    average_loudness = float(request.args.get('average_loudness'))
-    average_perceptual_sharpness = float(request.args.get('average_perceptual_sharpness'))
-    average_energy = float(request.args.get('average_energy'))
-
-    print(f"Received average_rms: {average_rms}, average_zcr: {average_zcr}")
-    print(f"Received average_spectral_centroid: {average_spectral_centroid}")
-    print(f"Received average_mfcc: {average_mfcc}")
-    print(f"Received average_loudness: {average_loudness}")
-    print(f"Received average_perceptual_sharpness: {average_perceptual_sharpness}")
-    print(f"Received average_energy: {average_energy}")
-    
-    audio_data = request.files['audio_data'].read()
-    audio_text = convert_audio_to_text(audio_data)
-
-    print(f"Audio text: {audio_text}")
-
-    new_prompt = f"""Please provide feedback for my joke recording, e.g., \"{audio_text}\". Take into consideration the voice meter measurements attached,
-average RMS ({average_rms}), average ZCR ({average_zcr}), average Spectral Centroid ({average_spectral_centroid}), average MFCC ({average_mfcc}),
-average Loudness ({average_loudness}), average Perceptual Sharpness ({average_perceptual_sharpness}), and average Energy ({average_energy}).
-You will analyze the performance and provide constructive feedback on the following aspects:
-
-1. Delivery: Evaluate the overall delivery style, including energy, engagement, and comedic timing.
-2. Cadence: Assess the rhythm, pace, and variation in speech to create comedic impact.
-3. Content: Comment on the humor, originality, and relevance of the jokes presented.
-4. Voice Quality: Consider the clarity, tone, and modulation of the voice.
-
-Please provide specific feedback on both strengths and areas for improvement. Your rating should reflect the overall effectiveness of the performance, taking into account the factors mentioned above. Please provide the rating in the format '֎ X/10', along with your detailed feedback (maximum 400 characters).
-
-Note: Your feedback should be honest and constructive, aiming to help enhance the stand-up comedy delivery. Your evaluation will play a crucial role in improving future performances. Thank you for your valuable input!"""
-
-    gpt_response = call_gpt3_api(new_prompt, 300)
-
-    # Add this line to print the raw GPT response
-    print(f"GPT response: {gpt_response}")
-
-    rating_match = re.search(r'(\d+(\.\d+)?)(?=/10)', gpt_response)
-
-    if rating_match:
-        rating = float(rating_match.group(1))
-    else:
-        rating = 0
-
-    return jsonify({"audio_text": audio_text, "rating": rating, "gpt_response": gpt_response})
 
 
 

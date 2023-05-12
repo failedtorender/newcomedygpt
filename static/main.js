@@ -6,12 +6,9 @@ stopButton.addEventListener('click', stopRecording);
 
 let recorder;
 let audioChunks;
-let meyda;
-let stopMeyda = false;
 let mediaStream;
 
 function startRecording() {
-  stopMeyda = false;
   navigator.mediaDevices.getUserMedia({ audio: true })
     .then(stream => {
       mediaStream = stream;
@@ -23,18 +20,6 @@ function startRecording() {
 
       const audioContext = new AudioContext();
       audioSource = audioContext.createMediaStreamSource(stream);
-      meyda = Meyda.createMeydaAnalyzer({
-        audioContext: audioContext,
-        source: audioSource,
-        bufferSize: 512,
-        featureExtractors: ['rms', 'zcr', 'spectralCentroid', 'mfcc', 'loudness', 'perceptualSharpness', 'energy'],
-        callback: features => {
-          if (!stopMeyda) {
-            console.log(features);
-          }
-        }
-      });
-      meyda.start();
 
       recordButton.disabled = true;
       stopButton.disabled = false;
@@ -46,11 +31,11 @@ function startRecording() {
 }
 
 
+
 document.getElementById("recordButton").addEventListener("click", () => {
   // Clear the previous results
   document.getElementById("audio-text").innerHTML = '';
   document.getElementById("gpt-response").innerHTML = '';
-  document.getElementById("joke-rating-value").innerHTML = '';
 
 
 });
@@ -60,10 +45,6 @@ function stopRecording() {
   console.log("stopRecording() called");
 
   recorder.stop();
-
-  stopMeyda = true; // Add this line
-
-  meyda.stop();
   audioSource.disconnect();
 
   // Stop the audio track in the mediaStream
@@ -82,17 +63,7 @@ function stopRecording() {
 
     const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
 
-    const averageRMS = meyda.get('rms');
-    const averageZCR = meyda.get('zcr');
-    const averageSpectralCentroid = meyda.get('spectralCentroid');
-    const averageMFCC = meyda.get('mfcc');
-    const averageLoudness = meyda.get('loudness');
-    const averagePerceptualSharpness = meyda.get('perceptualSharpness');
-    const averageEnergy = meyda.get('energy');
-
-analyzeJoke(audioBlob);
-rateJoke(audioBlob, averageRMS, averageZCR, averageSpectralCentroid, averageMFCC, averageLoudness, averagePerceptualSharpness, averageEnergy);
-
+    analyzeJoke(audioBlob);
 
     recordButton.disabled = false;
     stopButton.disabled = true;
@@ -102,10 +73,7 @@ rateJoke(audioBlob, averageRMS, averageZCR, averageSpectralCentroid, averageMFCC
   showTemporaryMessage();
 }
 
-  
 
-
-  
 
 
 
@@ -150,8 +118,6 @@ function showTemporaryMessage() {
   
 
   
-  
-
 
 
 
@@ -159,51 +125,6 @@ function handleDataAvailable(event) {
     audioChunks.push(event.data);
 }
 
-
-
-
-
-function rateJoke(audioBlob, averageRMS, averageZCR, averageSpectralCentroid, averageMFCC, averageLoudness, averagePerceptualSharpness, averageEnergy) {
-  console.log("Calling /joke_rating endpoint");
-
-  const formData = new FormData();
-  formData.append('audio_data', audioBlob);
-
-  const config = {
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    },
-    params: {
-      averageRMS,
-      averageZCR,
-      averageSpectralCentroid,
-      averageMFCC: averageMFCC.join(','),  // join MFCC array into comma-separated string
-      averageLoudness,
-      averagePerceptualSharpness,
-      averageEnergy
-    }
-  };
-
-  axios.post('/joke_rating', formData, config)
-    .then(response => {
-      console.log("Response data:", response.data); // Log the response data
-
-      if (!response.data || typeof response.data.rating === 'undefined') {
-        throw new Error('Response data is undefined or incomplete.');
-      }
-
-      // Display the joke rating and feedback
-      const rating = response.data.rating;
-      const gptResponse = response.data.gpt_response;
-      const feedback = gptResponse.replace(` ${rating}/10`, "").trim();
-      const ratingElement = document.getElementById("joke-rating-value");
-      ratingElement.innerHTML = `<b style="font-family: 'Lobster', cursive; font-size: 2rem; text-shadow: 4px 4px 8px #000000;">Downloading Persona...</b> <span style="font-family: 'Lobster', cursive; font-size: 2rem; text-shadow: 4px 4px 8px #000000;">${rating}/10</span> <p> ${feedback}`;
-
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
-}
 
 
 
@@ -243,11 +164,6 @@ function analyzeJoke(audioBlob) {
     });
 }
 
-
-function playSound(soundFile) {
-    const audio = new Audio(`/static/sounds/${soundFile}`);
-    audio.play();
-}
 
 
 
