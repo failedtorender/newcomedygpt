@@ -23,11 +23,11 @@ function startRecording() {
 
       const audioContext = new AudioContext();
       audioSource = audioContext.createMediaStreamSource(stream);
-      meyda = Meyda.createMeydaAnalyzer({
+      meyda = meyda.createMeydaAnalyzer({
         audioContext: audioContext,
         source: audioSource,
         bufferSize: 512,
-        featureExtractors: ['rms', 'zcr'],
+        featureExtractors: ['rms', 'zcr', 'spectralCentroid', 'mfcc', 'loudness', 'perceptualSharpness', 'energy'],
         callback: features => {
           if (!stopMeyda) {
             console.log(features);
@@ -84,9 +84,15 @@ function stopRecording() {
 
     const averageRMS = meyda.get('rms');
     const averageZCR = meyda.get('zcr');
+    const averageSpectralCentroid = meyda.get('spectralCentroid');
+    const averageMFCC = meyda.get('mfcc');
+    const averageLoudness = meyda.get('loudness');
+    const averagePerceptualSharpness = meyda.get('perceptualSharpness');
+    const averageEnergy = meyda.get('energy');
 
-    analyzeJoke(audioBlob);
-    rateJoke(audioBlob, averageRMS, averageZCR);
+analyzeJoke(audioBlob);
+rateJoke(audioBlob, averageRMS, averageZCR, averageSpectralCentroid, averageMFCC, averageLoudness, averagePerceptualSharpness, averageEnergy);
+
 
     recordButton.disabled = false;
     stopButton.disabled = true;
@@ -157,24 +163,33 @@ function handleDataAvailable(event) {
 
 
 
-function rateJoke(audioBlob, averageRMS, averageZCR) {
+function rateJoke(audioBlob, averageRMS, averageZCR, averageSpectralCentroid, averageMFCC, averageLoudness, averagePerceptualSharpness, averageEnergy) {
   console.log("Calling /joke_rating endpoint");
 
   const formData = new FormData();
   formData.append('audio_data', audioBlob);
 
   const config = {
-      headers: {
-          'Content-Type': 'multipart/form-data'
-      }
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    },
+    params: {
+      averageRMS,
+      averageZCR,
+      averageSpectralCentroid,
+      averageMFCC: averageMFCC.join(','),  // join MFCC array into comma-separated string
+      averageLoudness,
+      averagePerceptualSharpness,
+      averageEnergy
+    }
   };
 
-  axios.post(`/joke_rating?average_rms=${averageRMS}&average_zcr=${averageZCR}`, formData, config)
-  .then(response => {
+  axios.post('/joke_rating', formData, config)
+    .then(response => {
       console.log("Response data:", response.data); // Log the response data
 
       if (!response.data || typeof response.data.rating === 'undefined') {
-          throw new Error('Response data is undefined or incomplete.');
+        throw new Error('Response data is undefined or incomplete.');
       }
 
       // Display the joke rating and feedback
@@ -183,13 +198,13 @@ function rateJoke(audioBlob, averageRMS, averageZCR) {
       const feedback = gptResponse.replace(` ${rating}/10`, "").trim();
       const ratingElement = document.getElementById("joke-rating-value");
       ratingElement.innerHTML = `<b style="font-family: 'Lobster', cursive; font-size: 2rem; text-shadow: 4px 4px 8px #000000;">Downloading Persona...</b> <span style="font-family: 'Lobster', cursive; font-size: 2rem; text-shadow: 4px 4px 8px #000000;">${rating}/10</span> <p> ${feedback}`;
-      
-    
-  })
-  .catch(error => {
+
+    })
+    .catch(error => {
       console.error('Error:', error);
-  });
+    });
 }
+
 
 
 
