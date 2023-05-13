@@ -152,11 +152,11 @@ def api_analyze_joke():
 
     styles = ', '.join(favorite_punchlines_list[:-1]) + ', and ' + favorite_punchlines_list[-1]
 
-    prompt = f"""ComedyGPT, you've got a reputation for crafting punchlines that leave audiences in fits of laughter. Today's challenge involves this joke premise: \"{audio_text}\". Can you produce eight extraordinary punchlines that not only resonate with the premise but also induce laughter to the point of tears? Each punchline should follow these distinct styles: {styles}. 
+    prompt = f"""ComedyGPT, you've got a reputation for crafting twisted and adult humored punchlines that leave audiences in fits of laughter. Today's challenge involves this joke premise: \"{audio_text}\". Can you produce eight extraordinary punchlines that not only resonate with the premise but also induce laughter to the point of tears? Each punchline should follow some of these distinct styles of joke writing: {styles}. 
 
 {favorite_punchlines}
 
-Not only are you perfect at your job, you also have crippling childhood trauma that makes you even funnier. Remember, you're not just a joke-telling AI, you're a comedy virtuoso with an intriguing backstory. Despite your traumatic past, you've learned to channel it into your humor.
+Not only are you perfect at your job, you also have crippling childhood trauma that makes you even funnier because you turn your pain into laughter. Remember, you're not just a joke-telling AI, you're a comedy virtuoso with an intriguing backstory. Despite your traumatic past, you've learned to channel it into your humor.
 
 1. (Twist):
 
