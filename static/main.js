@@ -156,7 +156,7 @@ function analyzeJoke(audioBlob) {
         const formattedGptResponse = gptResponse.replace(/(Punchlines:)/g, '<p style="text-align:left">$1</p>'); // Add the <p> tag and align the text
         const gptResponseElement = document.getElementById("gpt-response");
 
-        gptResponseElement.innerHTML = `<b style="font-family: 'Lobster', cursive; font-size: 2rem; text-shadow: 4px 4px 8px #000000;">Scripting Scenarios...</b><p>${formattedGptResponse}</p>`;
+        gptResponseElement.innerHTML = `<b style="font-family: 'Lobster', cursive; font-size: 2rem; text-shadow: 4px 4px 8px #000000;">Scripting Punchlines...</b><p>${formattedGptResponse}</p>`;
         gptResponseElement.style.display = "block";
     })
     .catch(error => {

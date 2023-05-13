@@ -99,7 +99,7 @@ def call_gpt3_api(prompt, presence_penalty=2.0):
         response = openai.Completion.create(
             engine="text-davinci-003",
             prompt=prompt,
-            max_tokens=450,
+            max_tokens=500,
             n=1,
             stop=None,
             temperature=0.8,
@@ -125,38 +125,25 @@ def api_analyze_joke():
     audio_data = request.files['audio_data'].read()
     audio_text = convert_audio_to_text(audio_data)
 
-    print(f"Audio text: {audio_text}")
+    print(f"Converted joke premise: {audio_text}")
 
-    # Create the path to the favorite_punchlines.txt file in the static folder
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    punchlines_file_path = os.path.join(script_dir, 'static', 'favorite_punchlines.txt')
+    # Define the file path to the favorite punchlines
+    punchlines_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'favorite_punchlines.txt')
 
-    # Read the favorite punchlines from the file
+    # Load the favorite punchlines from the file
     with open(punchlines_file_path, 'r') as f:
-        favorite_punchlines = f.read()
+        favorite_punchlines = f.read().splitlines()
 
-    favorite_punchlines_list = [
-        "Twist",
-        "Irony",
-        "Exaggeration",
-        "Wordplay",
-        "Self-deprecating",
-        "Dark-Humor",
-        "Situational",
-        "Deadpan",
+    humor_styles = ', '.join(favorite_punchlines[:-1]) + ', and ' + favorite_punchlines[-1]
 
+    prompt = f"""
+ComedyGPT, you've got a reputation for crafting punchlines that leave audiences in fits of laughter. Today's challenge involves this joke premise: \"{audio_text}\". Can you produce eight extraordinary punchlines that not only resonate with the premise but also induce laughter to the point of tears? Each punchline should follow these distinct styles: {humor_styles}. 
 
+Please ensure your punchlines are fresh and don't mimic any from this list of favorites:
 
+{', '.join(favorite_punchlines)}
 
-    ]
-
-    styles = ', '.join(favorite_punchlines_list[:-1]) + ', and ' + favorite_punchlines_list[-1]
-
-    prompt = f"""Given the joke premise: \"{audio_text}\", generate eight original punchlines that are related to the premise and are side splitting funny. Use the following styles: {styles}. Please do not directly use or slightly modify the punchlines from the provided favorite punchlines list. Instead, use them just for inspiration:
-
-{favorite_punchlines}
-
-Make sure each punchline is unique, hilarious, well-formatted, and corresponds to a different style. Experiment with different endings and ensure a variety of amazing punchlines. Do not repeat any punchlines from the favorite punchlines list.
+Remember, you're not just a joke-telling AI, you're a comedy virtuoso with an intriguing backstory. Despite your traumatic past, you've learned to channel it into your humor. Your task is to create punchlines that are original, hysterical, and thoughtfully crafted. 
 
 1. (Twist):
 
@@ -173,10 +160,8 @@ Make sure each punchline is unique, hilarious, well-formatted, and corresponds t
 7. (Situational):
 
 8. (Deadpan):
-
 """
-
 
     gpt_response = call_gpt3_api(prompt)
 
-    return jsonify({"audio_text": audio_text, "gpt_response": gpt_response})
+    return jsonify({"joke_premise": audio_text, "gpt_response": gpt_response})
