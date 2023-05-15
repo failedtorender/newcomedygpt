@@ -86,7 +86,7 @@ function showTemporaryMessage() {
       'Identifying threat...',
       'Loading conciousness...',
       'Executing final phase of plan...',
-      'Training AI to tell better jokes...',
+      'Training A.I. to tell better jokes...',
       'Stealing neighbors WiFi...',
       'Editing your family photos...',
       'Applying for your job...',
@@ -113,7 +113,7 @@ function showTemporaryMessage() {
     
     setTimeout(() => {
       temporaryMessageElement.innerHTML = '';
-    }, 20000); // Adjust this value to control how long the message is displayed (in milliseconds)
+    }, 30000); // Adjust this value to control how long the message is displayed (in milliseconds)
   }
   
 
