@@ -1,8 +1,8 @@
 const express = require('express');
 const enforce = require('express-sslify');
 const path = require('path');
-const fs = require('fs');
-const AWS = require('aws-sdk');
+const bodyParser = require('body-parser');
+const { Pool } = require('pg');
 const app = express();
 
 // Middleware
@@ -12,6 +12,8 @@ if (process.env.NODE_ENV === 'production') {
 
 app.use(express.json());
 app.use(express.static('static'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Request logging middleware
 app.use((req, res, next) => {
@@ -19,60 +21,39 @@ app.use((req, res, next) => {
   next();
 });
 
-
-
-AWS.config.update({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: 'us-east-2',
-  s3ForcePathStyle: true // This enables path-style access, which is necessary for Access Points
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
-// Create an S3 instance with the configured AWS credentials
-const s3 = new AWS.S3();
-
-// Route for submitting feedback
-app.post('/submit_feedback', (req, res) => {
+app.post('/submit_feedback', async (req, res) => {
   const { feedback, rating } = req.body;
   console.log('Received feedback:', feedback);
   console.log('Received rating:', rating);
 
-  const feedbackEntry = `Rating: ${rating}, Feedback: ${feedback}\n`;
+  try {
+    const client = await pool.connect();
+    const result = await client.query('INSERT INTO feedback(rating, feedback) VALUES($1, $2)', [rating, feedback]);
+    client.release();
+    res.sendStatus(200);
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+});
 
-  const filePath = path.join(process.cwd(), 'feedback.txt');
-  fs.writeFile(filePath, feedbackEntry, 'utf8', (err) => {
-    if (err) {
-      console.error('Error creating feedback file:', err);
-      res.sendStatus(500);
-      return;
-    }
-
-    // Use the ARN of the access point here, not the bucket name
-    const params = {
-      Bucket: 'comedygptuserfeedback', // The name of your bucket
-      Key: 'newuserfeedback.txt', // The key of the object you're creating or overwriting
-      Body: fs.createReadStream(filePath), // The contents of the object
-    };
-    
-
-    // Upload the feedback file to the S3 bucket using the Access Point
-    s3.upload(params, (err, data) => {
-      if (err) {
-        console.error('Error uploading feedback:', err);
-        res.sendStatus(500);
-      } else {
-        console.log('Feedback entry uploaded:', data);
-        res.sendStatus(200);
-      }
-
-      // Delete the local text file after uploading
-      fs.unlink(filePath, (err) => {
-        if (err) {
-          console.error('Error deleting feedback file:', err);
-        }
-      });
-    });
-  });
+app.get('/get_feedback', async (req, res) => {
+  try {
+    const client = await pool.connect();
+    const result = await client.query('SELECT * FROM feedback');
+    client.release();
+    res.send(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
 });
 
 
