@@ -27,6 +27,7 @@ RUN pip install --upgrade setuptools
 RUN apt-get update && apt-get install -y --no-install-recommends apt-utils
 RUN pip install numpy==1.23.5
 RUN pip install tokenizers
+RUN npm install pg
 RUN apt-get install -y build-essential && \
     pip install --upgrade pip && \
     pip install setuptools-rust && \
