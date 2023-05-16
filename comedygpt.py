@@ -102,7 +102,7 @@ def call_gpt3_api(prompt, presence_penalty=2.0):
             max_tokens=500,
             n=1,
             stop=None,
-            temperature=0.9,
+            temperature=1.0,
             presence_penalty=presence_penalty,  # add this line
         )
     except Exception as e:
