@@ -1,2 +1,0 @@
-Feedback: First one! -Render, Rating: 5
-Feedback: Hello!, Rating: 3
