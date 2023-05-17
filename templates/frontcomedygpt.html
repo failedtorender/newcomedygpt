@@ -11,7 +11,7 @@
 
     <style>
     body {
-  background-image: linear-gradient(to right, #18656d, #18656d);
+  background-image: linear-gradient(to center, #282c35, #282c35);
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -28,7 +28,11 @@
   height: auto;
   margin-bottom: 0rem;
   
+  /* Add these lines */
+  border: 2px solid white; /* Set border thickness and color */
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5); /* Set drop shadow */
 }
+
 
 
 
@@ -56,10 +60,10 @@
 
 
 h1 {
-  font-size: 3rem;
+  font-size: 4rem;
   font-family: "Lobster";
   text-align: center;
-  width: 50%;
+  width: 100%;
   margin: 0 auto; /* Add this line */
   margin-top: 4rem;
   margin-bottom: 2rem;
@@ -235,7 +239,7 @@ li {
     margin-bottom: 0.5rem;
     font-size: 1.0rem;
     padding: 1.0rem 1.0rem;
-    border: black;
+    border: 1px solid black;  /* Add this line */
     color: white;
     background-color: #3c7c73;
     border-radius: 6px;
@@ -250,9 +254,10 @@ li {
 
 #recordButton:disabled, #stopButton:disabled {
     background-color: #8db2a5;
-    border: 1px solid #5d8c81;
+    border: 1px solid #5d8c81;  /* This will change the border color for disabled buttons */
     cursor: not-allowed;
-}
+} 
+
 
 
     </style>
@@ -277,7 +282,7 @@ li {
 <body>
     <div id="content">
         <div id="content-text">
-            <h1>ComedyGPT</h1>
+            <h1>Log, Laugh, Load</h1>
             <img id="funnybot" src="/static/FunnyBot3000.png">
             <div class="content-section">
                 <button id="recordButton" style="margin-bottom: 0.5rem;">Record a Premise</button>
@@ -285,7 +290,7 @@ li {
             </div>
             <div class="content-section">
                 <p style="font-family: 'Lobster', cursive; color: white; margin-top: 1.0rem;">
-                    Created by @failedtorender
+                    <b>ComedyGPT</b> &nbsp; by @failedtorender
                     <a href="https://www.twitter.com/failedtorender" target="_blank">
                         <img id="twitter-icon" src="static/twitter-icon.png" alt="@failedtorender">
                         <div id="temporary-message"></div>
