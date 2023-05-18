@@ -93,7 +93,7 @@ def convert_audio_to_text(audio_data):
 
     return audio_text
 
-def call_gpt3_api(prompt, presence_penalty=2.0):
+def call_gpt3_api(prompt, presence_penalty=1.0):
 
     try:
         response = openai.Completion.create(
@@ -102,7 +102,7 @@ def call_gpt3_api(prompt, presence_penalty=2.0):
             max_tokens=500,
             n=1,
             stop=None,
-            temperature=0.7,
+            temperature=0.5,
             presence_penalty=presence_penalty,  # add this line
         )
     except Exception as e:
