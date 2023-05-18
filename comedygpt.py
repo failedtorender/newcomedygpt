@@ -97,12 +97,12 @@ def call_gpt3_api(prompt, presence_penalty=2.0):
 
     try:
         response = openai.Completion.create(
-            engine="text-davinci-003",
+            engine="text-davinci-002",
             prompt=prompt,
             max_tokens=500,
             n=1,
             stop=None,
-            temperature=0.7,
+            temperature=0.8,
             presence_penalty=presence_penalty,  # add this line
         )
     except Exception as e:
